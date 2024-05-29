@@ -1,0 +1,41 @@
+version: "3.9"
+name: rates
+
+services:
+
+  postgres:
+    image: 'postgres:latest'
+    container_name: rates.db
+    hostname: rates.db
+    environment:
+      - 'POSTGRES_DB=rates'
+      - 'POSTGRES_PASSWORD=user'
+      - 'POSTGRES_USER=user'
+      - 'POSTGRES_INITDB_ARGS=--encoding=UTF-8 --locale=en_US.utf8'
+    ports:
+      - '5432:5432'
+    networks:
+      - rates
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  wiremock:
+    image: "wiremock/wiremock:latest"
+    container_name: rates.wiremock
+    hostname: rates.wiremock
+    ports:
+      - '8181:8080'
+    networks:
+      - rates
+    volumes:
+      - ./docker/wiremock:/home/wiremock/mappings
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  rates:
+    name: rates

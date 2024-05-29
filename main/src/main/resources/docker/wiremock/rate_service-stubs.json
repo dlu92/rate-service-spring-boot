@@ -1,0 +1,64 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "url": "/v1/currencies",
+        "method": "GET"
+      },
+      "response": {
+        "status": 200
+      }
+    },
+    {
+      "request": {
+        "url": "/v1/currencies",
+        "method": "GET"
+      },
+      "response": {
+        "status": 401
+      }
+    },
+    {
+      "request": {
+        "urlPathTemplate": "/v1/currencies/{currencyCode}",
+        "method": "GET",
+        "pathParameters": {
+          "currencyCode": {
+            "equalTo": ""
+          }
+        }
+      },
+      "response": {
+        "status": 200
+      }
+    },
+    {
+      "request": {
+        "urlPathTemplate": "/v1/currencies/{currencyCode}",
+        "method": "GET",
+        "pathParameters": {
+          "currencyCode": {
+            "equalTo": ""
+          }
+        }
+      },
+      "response": {
+        "status": 401
+      }
+    },
+    {
+      "request": {
+        "urlPathTemplate": "/v1/currencies/{currencyCode}",
+        "method": "GET",
+        "pathParameters": {
+          "currencyCode": {
+            "equalTo": ""
+          }
+        }
+      },
+      "response": {
+        "status": 404
+      }
+    }
+  ]
+}

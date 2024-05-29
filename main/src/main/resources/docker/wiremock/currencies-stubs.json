@@ -1,0 +1,113 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "headers": {
+          "Accept": {
+            "doesNotMatch": "application/json"
+          }
+        }
+      },
+      "response": {
+        "status": 400,
+        "body": "Invalid request. Only application/json is supported.",
+        "headers": {
+          "Content-Type": "text/plain"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "headers": {
+          "Accept": {
+            "equalTo": "application/json"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "jsonBody": {
+          "message": "Resource not found"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/v1/currencies",
+        "headers": {
+          "Accept": {
+            "equalTo": "application/json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": [
+          {
+            "symbol": "€",
+            "code": "EUR",
+            "decimals": 2
+          },
+          {
+            "symbol": "$",
+            "code": "USD",
+            "decimals": 2
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/v1/currencies/eur",
+        "headers": {
+          "Accept": {
+            "equalTo": "application/json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "symbol": "€",
+          "code": "EUR",
+          "decimals": 2
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/v1/currencies/usd",
+        "headers": {
+          "Accept": {
+            "equalTo": "application/json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "symbol": "$",
+          "code": "USD",
+          "decimals": 2
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
+  ]
+}

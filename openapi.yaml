@@ -1,0 +1,184 @@
+openapi: 3.0.3
+info:
+  title: Rates API Service
+  description: Service managing rates.
+  version: "1.0"
+servers:
+  - url: 'http://localhost:8080'
+tags:
+  - name: rates
+    description: Operations about rates.
+paths:
+  /v1/rates:
+    get:
+      tags:
+        - rates
+      parameters:
+        - name: brand_id
+          in: query
+          schema:
+            type: integer
+        - name: product_id
+          in: query
+          schema:
+            type: integer
+        - name: date
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rates'
+        '400':
+          description: Invalid request.
+    post:
+      tags:
+        - rates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RateInput'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rate'
+        '400':
+          description: Invalid request.
+  /v1/rates/{rateId}:
+    get:
+      tags:
+        - rates
+      parameters:
+        - name: rateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rate'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    put:
+      tags:
+        - rates
+      parameters:
+        - name: rateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RateInput'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rate'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    delete:
+      tags:
+        - rates
+      parameters:
+        - name: rateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+components:
+  schemas:
+    Rate:
+      type: object
+      properties:
+        id:
+          type: string
+        brand_id:
+          type: integer
+        product_id:
+          type: integer
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        price:
+          type: number
+        currency_code:
+          type: string
+        currency_symbol:
+          type: string
+    Rates:
+      type: array
+      items:
+        $ref: '#/components/schemas/Rate'
+    RateInput:
+      type: object
+      required:
+        - brand_id
+        - product_id
+        - start_date
+        - end_date
+        - price
+        - currency_code
+        - currency_symbol
+      properties:
+        brand_id:
+          type: integer
+        product_id:
+          type: integer
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        price:
+          type: number
+        currency_code:
+          type: string
+    NotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+        status:
+          type: string
+        message:
+          type: string
