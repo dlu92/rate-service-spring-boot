@@ -20,7 +20,7 @@ public final class RateFilterRequest {
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", message = "Date must be in the format yyyy-MM-dd HH:mm:ss")
     private String date;
 
-    RateFilterRequest(Integer brand_id, Integer product_id, String date) {
+    public RateFilterRequest(Integer brand_id, Integer product_id, String date) {
         this.brandId = brand_id;
         this.productId = product_id;
         this.date = date;

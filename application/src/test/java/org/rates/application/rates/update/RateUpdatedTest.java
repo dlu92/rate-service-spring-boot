@@ -78,9 +78,6 @@ public final class RateUpdatedTest {
 
         RateEntity finalRate = this.rateUpdated.update(RATE_ID, rate);
 
-        verify(this.ratePersistence).update(RATE_ID, rate);
-        verify(this.currencyIntegrations).getCurrencyByCode(CURRENCY_CODE.toLowerCase());
-
         assert(Objects.requireNonNull(finalRate.getId()).getValue().equals(RATE_ID));
         assert(finalRate.getBrandId().getValue().equals(BRAND_ID));
         assert(finalRate.getProductId().getValue().equals(PRODUCT_ID));
@@ -90,6 +87,9 @@ public final class RateUpdatedTest {
         assert(finalRate.getCurrencyCode().getValue().equals(CURRENCY_CODE));
         assert(Objects.requireNonNull(finalRate.getCurrencySymbol()).getValue().equals(CURRENCY_SYMBOL));
         assert(Objects.requireNonNull(finalRate.getCurrencyDecimals()).getValue().equals(CURRENCY_DECIMALS));
+
+        verify(this.ratePersistence).update(RATE_ID, rate);
+        verify(this.currencyIntegrations).getCurrencyByCode(CURRENCY_CODE.toLowerCase());
 
     }
 

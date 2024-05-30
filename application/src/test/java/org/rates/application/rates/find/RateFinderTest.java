@@ -66,9 +66,6 @@ public final class RateFinderTest {
 
         RateEntity rate = this.rateFinder.find(RATE_ID);
 
-        verify(this.ratePersistence).find(RATE_ID);
-        verify(this.currencyIntegrations).getCurrencyByCode(CURRENCY_CODE.toLowerCase());
-
         assert(Objects.requireNonNull(rate.getId()).getValue().equals(RATE_ID));
         assert(rate.getBrandId().getValue().equals(BRAND_ID));
         assert(rate.getProductId().getValue().equals(PRODUCT_ID));
@@ -78,6 +75,9 @@ public final class RateFinderTest {
         assert(rate.getCurrencyCode().getValue().equals(CURRENCY_CODE));
         assert(Objects.requireNonNull(rate.getCurrencySymbol()).getValue().equals(CURRENCY_SYMBOL));
         assert(Objects.requireNonNull(rate.getCurrencyDecimals()).getValue().equals(CURRENCY_DECIMALS));
+
+        verify(this.ratePersistence).find(RATE_ID);
+        verify(this.currencyIntegrations).getCurrencyByCode(CURRENCY_CODE.toLowerCase());
 
     }
 

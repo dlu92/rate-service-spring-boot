@@ -23,8 +23,8 @@ public final class RateEntityToResponse {
             rateEntity.getId().getValue(),
             rateEntity.getBrandId().getValue(),
             rateEntity.getProductId().getValue(),
-            (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(rateEntity.getStartDate().getValue()),
-            (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(rateEntity.getEndDate().getValue()),
+            (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(rateEntity.getStartDate().getValue()),
+            (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(rateEntity.getEndDate().getValue()),
             price,
             rateEntity.getCurrencyCode().getValue(),
             rateEntity.getCurrencySymbol().getValue()

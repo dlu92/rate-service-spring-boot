@@ -23,9 +23,6 @@ public final class RatesGetController {
 
     @GetMapping("")
     public ResponseEntity<RateResponse[]> getList(@Valid @ModelAttribute RateFilterRequest request) throws ParseException {
-        System.out.println(request.getProductId());
-        System.out.println(request.getBrandId());
-        System.out.println(request.getDate());
         RateEntity[] rates = this.rateProductPriceFinderByDate.search(request.getProductId(), request.getBrandId(), (new SimpleDateFormat("yyyy-MM-dd")).parse(request.getDate()));
 
         return ResponseEntity.ok(RateEntityCollectionToResponse.map(rates));
