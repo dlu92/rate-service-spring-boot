@@ -157,7 +157,6 @@ components:
         - end_date
         - price
         - currency_code
-        - currency_symbol
       properties:
         brand_id:
           type: integer
