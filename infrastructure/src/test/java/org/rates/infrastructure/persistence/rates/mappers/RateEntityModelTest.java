@@ -4,31 +4,40 @@ import org.junit.jupiter.api.Test;
 import org.rates.domain.rates.*;
 import org.rates.infrastructure.persistence.rates.models.Rate;
 import java.util.Date;
-import static junit.framework.Assert.assertEquals;
 
 public class RateEntityModelTest {
 
+    private static final Long RATE_ID = 1L;
+    private static final Integer BRAND_ID = 1;
+    private static final Integer PRODUCT_ID = 1;
+    private static final Date START_DATE = new Date();
+    private static final Date END_DATE = new Date();
+    private static final Float PRICE = 1.0F;
+    private static final String CURRENCY_CODE = "USD";
+
     @Test
     public void testMap() {
+
         RateEntity rateEntity = new RateEntity(
-            new RateId(1L),
-            new RateBrandId(1),
-            new RateProductId(1),
-            new RateStartDate(new Date()),
-            new RateEndDate(new Date()),
-            new RatePrice(1.0f),
-            new RateCurrencyCode("USD"),
+            new RateId(RATE_ID),
+            new RateBrandId(BRAND_ID),
+            new RateProductId(PRODUCT_ID),
+            new RateStartDate(START_DATE),
+            new RateEndDate(END_DATE),
+            new RatePrice(PRICE),
+            new RateCurrencyCode(CURRENCY_CODE),
             null,
             null
         );
 
         Rate rate = RateEntityToModel.map(rateEntity, new Rate());
 
-        assertEquals(rate.getBrandId(), rateEntity.getBrandId().getValue());
-        assertEquals(rate.getProductId(), rateEntity.getProductId().getValue());
-        assertEquals(rate.getStartDate(), rateEntity.getStartDate().getValue());
-        assertEquals(rate.getEndDate(), rateEntity.getEndDate().getValue());
-        assertEquals(rate.getPrice(), rateEntity.getPrice().getValue());
-        assertEquals(rate.getCurrencyCode(), rateEntity.getCurrencyCode().getValue());
+        assert(rateEntity.getBrandId().getValue().equals(rate.getBrandId()));
+        assert(rateEntity.getProductId().getValue().equals(rate.getProductId()));
+        assert(rateEntity.getStartDate().getValue().equals(rate.getStartDate()));
+        assert(rateEntity.getEndDate().getValue().equals(rate.getEndDate()));
+        assert(rateEntity.getPrice().getValue().equals(rate.getPrice()));
+        assert(rateEntity.getCurrencyCode().getValue().equals(rate.getCurrencyCode()));
+
     }
 }

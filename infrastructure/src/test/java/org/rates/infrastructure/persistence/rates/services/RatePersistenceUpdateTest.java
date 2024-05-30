@@ -6,10 +6,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.rates.domain.rates.*;
+import org.rates.infrastructure.persistence.rates.exceptions.RateEntityNotFound;
 import org.rates.infrastructure.persistence.rates.models.Rate;
 import org.rates.infrastructure.persistence.rates.repositories.RateRepository;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 import static junit.framework.Assert.assertNotNull;
@@ -17,6 +19,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class RatePersistenceUpdateTest {
+
+    private static final Long RATE_ID = 1L;
+    private static final Integer BRAND_ID = 1;
+    private static final Integer PRODUCT_ID = 1;
+    private static final Date START_DATE = new Date();
+    private static final Date END_DATE = new Date();
+    private static final Float PRICE = 1.0F;
+    private static final String CURRENCY_CODE = "USD";
 
     @Mock
     private RateRepository rateRepository;
@@ -31,46 +41,83 @@ public class RatePersistenceUpdateTest {
 
     @Test
     public void testUpdateRate() {
-        Date date       = new Date();
-        Rate rate       = Rate.builder()
-            .id(1L)
-            .brandId(1)
-            .productId(1)
-            .startDate(date)
-            .endDate(date)
-            .price(1.0F)
-            .currencyCode("USD")
+
+        Rate rate               = Rate.builder()
+            .id(RATE_ID)
+            .brandId(BRAND_ID)
+            .productId(PRODUCT_ID)
+            .startDate(START_DATE)
+            .endDate(END_DATE)
+            .price(PRICE)
+            .currencyCode(CURRENCY_CODE)
             .build();
 
-        RateEntity rateEntity = new RateEntity(
-            new RateId(1L),
-            new RateBrandId(1),
-            new RateProductId(1),
-            new RateStartDate(date),
-            new RateEndDate(date),
-            new RatePrice(1.0F),
-            new RateCurrencyCode("USD"),
+        Rate rateReturn         = Rate.builder()
+                .id(RATE_ID)
+                .brandId(BRAND_ID)
+                .productId(PRODUCT_ID)
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .price(PRICE)
+                .currencyCode(CURRENCY_CODE)
+                .build();
+
+        RateEntity rateEntity   = new RateEntity(
+            new RateId(RATE_ID),
+            new RateBrandId(BRAND_ID),
+            new RateProductId(PRODUCT_ID),
+            new RateStartDate(START_DATE),
+            new RateEndDate(END_DATE),
+            new RatePrice(PRICE),
+            new RateCurrencyCode(CURRENCY_CODE),
             null,
             null
         );
 
-        when(this.rateRepository.findById(1L)).thenReturn(Optional.ofNullable(rate));
-        assert rate != null;
-        when(this.rateRepository.save(rate)).thenReturn(rate);
+        when(this.rateRepository.save(rate)).thenReturn(rateReturn);
 
-        RateEntity finalRateEntity = this.ratePersistence.update(1L, rateEntity);
+        when(this.rateRepository.findById(RATE_ID)).thenReturn(Optional.ofNullable(rateReturn));
 
-        verify(this.rateRepository).findById(1L);
+        RateEntity finalRateEntity = this.ratePersistence.update(RATE_ID, rateEntity);
+
+        assert(Objects.requireNonNull(finalRateEntity.getId()).getValue().equals(RATE_ID));
+        assert(finalRateEntity.getBrandId().getValue().equals(BRAND_ID));
+        assert(finalRateEntity.getProductId().getValue().equals(PRODUCT_ID));
+        assert(finalRateEntity.getStartDate().getValue().equals(START_DATE));
+        assert(finalRateEntity.getEndDate().getValue().equals(END_DATE));
+        assert(finalRateEntity.getPrice().getValue().equals(PRICE));
+        assert(finalRateEntity.getCurrencyCode().getValue().equals(CURRENCY_CODE));
+
+        verify(this.rateRepository).findById(RATE_ID);
         verify(this.rateRepository).save(rate);
 
-        assertNotNull(finalRateEntity.getBrandId().getValue());
+    }
 
-        assert(finalRateEntity.getBrandId().getValue().equals(rateEntity.getBrandId().getValue()));
-        assert(finalRateEntity.getProductId().getValue().equals(rateEntity.getProductId().getValue()));
-        assert(finalRateEntity.getStartDate().getValue().equals(rateEntity.getStartDate().getValue()));
-        assert(finalRateEntity.getEndDate().getValue().equals(rateEntity.getEndDate().getValue()));
-        assert(finalRateEntity.getPrice().getValue().equals(rateEntity.getPrice().getValue()));
-        assert(finalRateEntity.getCurrencyCode().getValue().equals(rateEntity.getCurrencyCode().getValue()));
+    @Test
+    public void testUpdateRateNotFound() {
+
+        RateEntity rateEntity   = new RateEntity(
+            new RateId(RATE_ID),
+            new RateBrandId(BRAND_ID),
+            new RateProductId(PRODUCT_ID),
+            new RateStartDate(START_DATE),
+            new RateEndDate(END_DATE),
+            new RatePrice(PRICE),
+            new RateCurrencyCode(CURRENCY_CODE),
+            null,
+            null
+        );
+
+        when(this.rateRepository.findById(RATE_ID)).thenThrow(new RateEntityNotFound());
+
+        try {
+            this.ratePersistence.update(RATE_ID, rateEntity);
+        } catch (RateEntityNotFound e) {
+            assert(true);
+        }
+
+        verify(this.rateRepository).findById(RATE_ID);
+
     }
 
 }

@@ -9,12 +9,21 @@ import org.rates.domain.rates.RateEntity;
 import org.rates.infrastructure.persistence.rates.models.Rate;
 import org.rates.infrastructure.persistence.rates.repositories.RateRepository;
 import java.util.Date;
+import java.util.Objects;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class RatePersistenceSearchTest {
+
+    private static final Long RATE_ID = 1L;
+    private static final Integer BRAND_ID = 1;
+    private static final Integer PRODUCT_ID = 1;
+    private static final Date START_DATE = new Date();
+    private static final Date END_DATE = new Date();
+    private static final Float PRICE = 1.0F;
+    private static final String CURRENCY_CODE = "USD";
 
     @Mock
     private RateRepository rateRepository;
@@ -29,36 +38,52 @@ public class RatePersistenceSearchTest {
 
     @Test
     public void testSearchRate() {
-        Date date       = new Date();
+
         Rate[] rates    = new Rate[]{
             Rate.builder()
-                .id(1L)
-                .brandId(1)
-                .productId(1)
-                .startDate(date)
-                .endDate(date)
-                .price(1.0F)
-                .currencyCode("USD")
+                .id(RATE_ID)
+                .brandId(BRAND_ID)
+                .productId(PRODUCT_ID)
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .price(PRICE)
+                .currencyCode(CURRENCY_CODE)
                 .build()
         };
 
-        when(this.rateRepository.productPriceFinderByDate(1, 1, date))
+        when(this.rateRepository.productPriceFinderByDate(PRODUCT_ID, BRAND_ID, START_DATE))
             .thenReturn(rates);
 
-        RateEntity[] rateEntities = this.ratePersistence.searchByProductFinderDate(1, 1, date);
-
-        verify(this.rateRepository).productPriceFinderByDate(1, 1, date);
+        RateEntity[] rateEntities = this.ratePersistence.searchByProductFinderDate(PRODUCT_ID, BRAND_ID, START_DATE);
 
         for(RateEntity rateEntity : rateEntities) {
-            assertNotNull(rateEntity.getBrandId().getValue());
 
-            assert(rateEntity.getBrandId().getValue().equals(1));
-            assert(rateEntity.getProductId().getValue().equals(1));
-            assert(rateEntity.getStartDate().getValue().equals(date));
-            assert(rateEntity.getEndDate().getValue().equals(date));
-            assert(rateEntity.getPrice().getValue().equals(1.0F));
-            assert(rateEntity.getCurrencyCode().getValue().equals("USD"));
+            assert(Objects.requireNonNull(rateEntity.getId()).getValue().equals(RATE_ID));
+            assert(rateEntity.getBrandId().getValue().equals(BRAND_ID));
+            assert(rateEntity.getProductId().getValue().equals(PRODUCT_ID));
+            assert(rateEntity.getStartDate().getValue().equals(START_DATE));
+            assert(rateEntity.getEndDate().getValue().equals(END_DATE));
+            assert(rateEntity.getPrice().getValue().equals(PRICE));
+            assert(rateEntity.getCurrencyCode().getValue().equals(CURRENCY_CODE));
+
+            verify(this.rateRepository).productPriceFinderByDate(PRODUCT_ID, BRAND_ID, START_DATE);
+
         }
+
+    }
+
+    @Test
+    public void testSearchRateNotResults() {
+
+        when(this.rateRepository.productPriceFinderByDate(PRODUCT_ID, BRAND_ID, START_DATE))
+            .thenReturn(new Rate[0]);
+
+        RateEntity[] rateEntities = this.ratePersistence.searchByProductFinderDate(PRODUCT_ID, BRAND_ID, START_DATE);
+
+        assert(rateEntities.length == 0);
+
+        verify(this.rateRepository).productPriceFinderByDate(PRODUCT_ID, BRAND_ID, START_DATE);
+
     }
 
 }

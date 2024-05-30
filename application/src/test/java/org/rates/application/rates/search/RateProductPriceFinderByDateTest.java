@@ -43,7 +43,7 @@ public final class RateProductPriceFinderByDateTest {
     @Test
     public void testSearch() {
 
-        RateEntity rate     = new RateEntity(
+        RateEntity rate = new RateEntity(
             new RateId(RATE_ID),
             new RateBrandId(BRAND_ID),
             new RateProductId(PRODUCT_ID),
@@ -67,7 +67,7 @@ public final class RateProductPriceFinderByDateTest {
                 new CurrencyDecimals(CURRENCY_DECIMALS)
             ));
 
-        RateEntity[] rates = this.rateSearch.search(PRODUCT_ID, BRAND_ID, START_DATE);
+        RateEntity[] rates  = this.rateSearch.search(PRODUCT_ID, BRAND_ID, START_DATE);
 
         assert(rates.length == 1);
 
@@ -93,16 +93,14 @@ public final class RateProductPriceFinderByDateTest {
     @Test
     public void testSearchNotResults() {
 
-        Integer productId = 2;
-
-        when(this.ratePersistence.searchByProductFinderDate(productId, BRAND_ID, START_DATE))
+        when(this.ratePersistence.searchByProductFinderDate(PRODUCT_ID, BRAND_ID, START_DATE))
             .thenReturn(new RateEntity[0]);
 
-        RateEntity[] rates = this.rateSearch.search(productId, BRAND_ID, START_DATE);
+        RateEntity[] rates = this.rateSearch.search(PRODUCT_ID, BRAND_ID, START_DATE);
 
         assert(rates.length == 0);
 
-        verify(this.ratePersistence).searchByProductFinderDate(productId, BRAND_ID, START_DATE);
+        verify(this.ratePersistence).searchByProductFinderDate(PRODUCT_ID, BRAND_ID, START_DATE);
 
     }
 }

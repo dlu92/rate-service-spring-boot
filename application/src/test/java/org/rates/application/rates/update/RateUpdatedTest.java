@@ -44,7 +44,7 @@ public final class RateUpdatedTest {
     @Test
     public void testUpdateRate() {
 
-        RateEntity rate     = new RateEntity(
+        RateEntity rate = new RateEntity(
             null,
             new RateBrandId(BRAND_ID),
             new RateProductId(PRODUCT_ID),
@@ -96,8 +96,7 @@ public final class RateUpdatedTest {
     @Test
     public void testUpdateRateException() {
 
-        Long rateId = 2L;
-        RateEntity rate     = new RateEntity(
+        RateEntity rate = new RateEntity(
             null,
             new RateBrandId(BRAND_ID),
             new RateProductId(PRODUCT_ID),
@@ -109,15 +108,15 @@ public final class RateUpdatedTest {
             null
         );
 
-        when(this.ratePersistence.update(rateId, rate)).thenThrow(new RateEntityNotFound());
+        when(this.ratePersistence.update(RATE_ID, rate)).thenThrow(new RateEntityNotFound());
 
         try {
-            this.rateUpdated.update(rateId, rate);
+            this.rateUpdated.update(RATE_ID, rate);
         } catch (RateEntityNotFound e) {
             assert(true);
         }
 
-        verify(this.ratePersistence).update(rateId, rate);
+        verify(this.ratePersistence).update(RATE_ID, rate);
 
     }
 

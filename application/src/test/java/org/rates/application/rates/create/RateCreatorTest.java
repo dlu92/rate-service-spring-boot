@@ -42,7 +42,6 @@ public final class RateCreatorTest {
     @Test
     public void testCreateRate() {
 
-        Date date       = new Date();
         RateEntity rate = new RateEntity(
                 null,
                 new RateBrandId(BRAND_ID),

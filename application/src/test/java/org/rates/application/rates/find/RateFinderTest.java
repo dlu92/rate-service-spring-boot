@@ -84,17 +84,15 @@ public final class RateFinderTest {
     @Test
     public void testFindException() {
 
-        Long rateId = 2L;
-
-        when(this.ratePersistence.find(rateId)).thenThrow(new RateEntityNotFound());
+        when(this.ratePersistence.find(RATE_ID)).thenThrow(new RateEntityNotFound());
 
         try {
-            this.rateFinder.find(rateId);
+            this.rateFinder.find(RATE_ID);
         } catch (RateEntityNotFound e) {
             assert(true);
         }
 
-        verify(this.ratePersistence).find(rateId);
+        verify(this.ratePersistence).find(RATE_ID);
 
     }
 
