@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Service
 @AllArgsConstructor
-public final class ProductPriceFinderByDateImp implements ProductPriceFinderByDate {
+public final class RateProductPriceFinderByDateImp implements RateProductPriceFinderByDate {
 
     private final RatePersistence ratePersistence;
     private final CurrencyIntegration currencyIntegrations;

@@ -14,7 +14,7 @@ import java.util.Objects;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class RateCreatorTest {
+public final class RateCreatorTest {
     @Mock
     private CurrencyIntegration currencyIntegrations;
 
@@ -31,12 +31,14 @@ public class RateCreatorTest {
 
     @Test
     public void testCreateRate() {
+
+        Date date       = new Date();
         RateEntity rate = new RateEntity(
                 null,
                 new RateBrandId(1),
                 new RateProductId(1),
-                new RateStartDate(new Date()),
-                new RateEndDate(new Date()),
+                new RateStartDate(date),
+                new RateEndDate(date),
                 new RatePrice(1.0F),
                 new RateCurrencyCode("USD"),
                 null,
@@ -47,8 +49,8 @@ public class RateCreatorTest {
                 new RateId(1L),
                 new RateBrandId(1),
                 new RateProductId(1),
-                new RateStartDate(new Date()),
-                new RateEndDate(new Date()),
+                new RateStartDate(date),
+                new RateEndDate(date),
                 new RatePrice(1.0F),
                 new RateCurrencyCode("USD"),
                 null,
@@ -63,10 +65,18 @@ public class RateCreatorTest {
 
         RateEntity finalRate = this.rateCreator.create(rate);
 
+        verify(this.ratePersistence).save(rate);
+        verify(this.currencyIntegrations).getCurrencyByCode("usd");
+
+        assert(Objects.requireNonNull(finalRate.getId()).getValue().equals(1L));
+        assert(finalRate.getBrandId().getValue().equals(1));
+        assert(finalRate.getProductId().getValue().equals(1));
+        assert(finalRate.getStartDate().getValue().equals(date));
+        assert(finalRate.getEndDate().getValue().equals(date));
+        assert(finalRate.getPrice().getValue().equals(1.0F));
+        assert(finalRate.getCurrencyCode().getValue().equals("USD"));
         assert(Objects.requireNonNull(finalRate.getCurrencySymbol()).getValue().equals("$"));
         assert(Objects.requireNonNull(finalRate.getCurrencyDecimals()).getValue().equals(2));
 
-        verify(this.ratePersistence).save(rate);
-        verify(this.currencyIntegrations).getCurrencyByCode("usd");
     }
 }
